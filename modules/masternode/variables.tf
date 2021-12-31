@@ -1,3 +1,8 @@
+variable "region" {
+  description = "Region to run the masternode in, used for EIP association"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "ID of the VPC to run the masternode into"
   type        = string

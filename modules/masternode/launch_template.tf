@@ -3,6 +3,7 @@ resource "aws_launch_template" "lt" {
   description   = var.description
   image_id      = "ami-0ed9277fb7eb570c9"
   instance_type = var.instance_type
+  key_name      = "main-rajiska"
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -61,67 +62,32 @@ resource "aws_launch_template" "lt" {
     }
   }
 
-  user_data = filebase64("${path.module}/user_data.sh")
+  tag_specifications {
+    resource_type = "network-interface"
+
+    tags = {
+      Name = "masternode-${var.name}"
+    }
+  }
+
+  user_data = base64encode(data.template_file.user_data.rendered)
 
   lifecycle {
     ignore_changes = [ block_device_mappings.1.ebs.0.snapshot_id ]
   }
 }
 
-resource "aws_iam_instance_profile" "ip" {
-  name  = "masternode-${var.name}"
-  role  = module.instance_role.name
+resource "aws_eip" "eip" {
+  tags = {
+    Name = "masternode-${var.name}"
+  }
 }
 
-module "instance_role" {
-  source = "../iam_role"
+data "template_file" "user_data" {
+  template = file("${path.module}/user_data.sh")
 
-  name  = "${var.name}-role"
-  path  = "/ec2/masternode/"
-
-  assume_role_policy  = <<EOF
-{
-  "Version": "2008-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": ["ec2.amazonaws.com"]
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-
-  attachments_arn   = [
-    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  ]
-
-  policies          = [
-    {
-      name    = "ec2"
-      policy  = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "ManageOwnEIP",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:AllocateAddress",
-        "ec2:DisassociateAddress"
-      ],
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "aws:ARN": "$${ec2:SourceInstanceARN}"
-        }
-      }
-    }
-  ]
-}
-EOF
-    }
-  ]
+  vars = {
+    EIP_ALLOCATION_ID = aws_eip.eip.allocation_id
+    REGION            = var.region
+  }
 }
