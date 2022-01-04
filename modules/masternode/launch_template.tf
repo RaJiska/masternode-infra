@@ -1,5 +1,5 @@
 resource "aws_launch_template" "lt" {
-  name          = "masternode-${var.name}"
+  name          = "${local.stack_name}-${var.name}"
   description   = var.description
   image_id      = "ami-0ed9277fb7eb570c9"
   instance_type = var.instance_type
@@ -50,7 +50,7 @@ resource "aws_launch_template" "lt" {
     resource_type = "instance"
 
     tags = {
-      Name  = "masternode-${var.name}"
+      Name  = "${local.stack_name}-${var.name}"
     }
   }
 
@@ -58,7 +58,7 @@ resource "aws_launch_template" "lt" {
     resource_type = "volume"
 
     tags = {
-      Name = "masternode-${var.name}"
+      Name = "${local.stack_name}-${var.name}"
     }
   }
 
@@ -66,7 +66,7 @@ resource "aws_launch_template" "lt" {
     resource_type = "network-interface"
 
     tags = {
-      Name = "masternode-${var.name}"
+      Name = "${local.stack_name}-${var.name}"
     }
   }
 
@@ -79,7 +79,7 @@ resource "aws_launch_template" "lt" {
 
 resource "aws_eip" "eip" {
   tags = {
-    Name = "masternode-${var.name}"
+    Name = "${local.stack_name}-${var.name}"
   }
 }
 

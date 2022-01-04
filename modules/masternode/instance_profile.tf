@@ -1,15 +1,15 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_instance_profile" "ip" {
-  name  = "masternode-${var.name}"
+  name  = "${local.stack_name}-${var.name}"
   role  = module.instance_role.name
 }
 
 module "instance_role" {
   source = "../iam_role"
 
-  name  = "${var.name}-role"
-  path  = "/ec2/masternode/"
+  name_prefix = "${local.stack_name}-${var.name}-"
+  name        = "ec2-role"
 
   assume_role_policy  = <<EOF
 {
@@ -75,7 +75,7 @@ EOF
       "Resource": "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:network-interface/*",
       "Condition": {
         "StringEquals": {
-          "ec2:ResourceTag/Name": "masternode-${var.name}"
+          "ec2:ResourceTag/Name": "${local.stack_name}-${var.name}"
         }
       }
     }

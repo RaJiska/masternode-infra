@@ -7,6 +7,6 @@ module "masternode_cro" {
   description                 = "CRO Masternode"
   subnets                     = module.vpc_main.public_subnets
   instance_type               = "t2.micro"
-  blockchain_volume_size      = 4
-  blockchain_volume_snapshot  = "snap-0be0513e93e4fcdb7"
+  blockchain_volume_size      = 8
+  blockchain_volume_snapshot  = "snap-08391e1d0fe151035"
 }

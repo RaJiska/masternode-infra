@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "asg" {
-  name                      = "masternode-${var.name}"
+  name                      = "${local.stack_name}-${var.name}"
   desired_capacity          = 1
   max_size                  = 1
   min_size                  = 1
@@ -17,7 +17,7 @@ resource "aws_autoscaling_group" "asg" {
     [
       {
         "key"                 = "Name"
-        "value"               = "masternode-${var.name}"
+        "value"               = "${local.stack_name}-${var.name}"
         "propagate_at_launch" = true
       }
     ]
