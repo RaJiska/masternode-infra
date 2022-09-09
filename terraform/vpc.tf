@@ -1,12 +1,12 @@
 module "vpc_main" {
   source = "../modules/vpc"
 
-  region  = var.region
-  azs     = formatlist("${var.region}%s", var.azs)
+  region = var.region
+  azs    = formatlist("${var.region}%s", var.azs)
 
-  name          = "main"
-  cidr          = "192.168.0.0/16"
-  subnets_cidr  = [
+  name = "main"
+  cidr = "192.168.0.0/16"
+  subnets_cidr = [
     {
       public  = "192.168.0.0/23"
       private = "192.168.2.0/23"

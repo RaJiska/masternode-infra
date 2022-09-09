@@ -7,5 +7,5 @@ variable "region" {
 variable "azs" {
   description = "Availability Zones services should be redundant into"
   type        = list(string)
-  default     = [ "a", "b", "c" ]
+  default     = ["a", "b", "c"]
 }

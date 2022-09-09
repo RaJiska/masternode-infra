@@ -12,7 +12,7 @@ resource "aws_backup_plan" "backup_plan" {
   rule {
     rule_name         = "ebs-snapshots"
     target_vault_name = aws_backup_vault.backup_vault.name
-    schedule          = "cron(0 1/12 ? * * *)"
+    schedule          = "cron(0 1/1 ? * * *)"
 
     lifecycle {
       delete_after = 4
@@ -49,7 +49,7 @@ module "backup_role" {
   name_prefix = "${local.stack_name}-${var.name}-"
   name        = "backup-role"
 
-  assume_role_policy  = <<EOF
+  assume_role_policy = <<EOF
 {
   "Version": "2008-10-17",
   "Statement": [
@@ -64,10 +64,10 @@ module "backup_role" {
 }
 EOF
 
-  policies          = [
+  policies = [
     {
-      name    = "manage-snapshots"
-      policy  = <<EOF
+      name   = "manage-snapshots"
+      policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [

@@ -1,6 +1,6 @@
 provider "aws" {
-  profile	= "masternode"
-  region	= var.region
+  profile = "masternode"
+  region  = var.region
 }
 
 terraform {
